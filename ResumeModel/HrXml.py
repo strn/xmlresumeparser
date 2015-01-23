@@ -49,6 +49,6 @@ class HrXml:
 		lang = 'Languages: %s' % self.lang
 		ref = 'References: %s' % self.ref
 		addt = 'Additional items: %s' % self.addt
-		ret = '=== HrXml model: ===\r\n%s\r\n%s\r\n%s\r\n%s\r\n%s\r\n%s\r\n%s\r\n%s\r\n%s\r\n=== HrXml model ends ===' % \
+		ret = '=== HrXml model: ===\r\n*** %s\r\n*** %s\r\n*** %s\r\n*** %s\r\n*** %s\r\n*** %s\r\n*** %s\r\n*** %s\r\n*** %s\r\n=== HrXml model ends ===' % \
 			(cnt, ex, emp, edu, cert, qly, lang, ref, addt)
 		return ret.encode( 'utf-8' )

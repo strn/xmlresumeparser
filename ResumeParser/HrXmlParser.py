@@ -78,6 +78,37 @@ class ResumeParser():
 
 	def getModel(self):
 		# Copy all fields to model
+		#
+		# Contact info
+		self.model.personName = self.contParser.personName
+		self.model.altScript = self.contParser.altScript
+		self.model.alternateName = self.contParser.alternateName
+		self.model.privateEmailAddress = self.contParser.privateEmailAddress
+		self.model.businessEmailAddress = self.contParser.businessEmailAddress
+		self.model.streetAddress = self.contParser.streetAddress
+		self.model.countryCode = self.contParser.countryCode
+		self.model.postalCode = self.contParser.postalCode
+		self.model.region = self.contParser.region
+		self.model.municipality = self.contParser.municipality
+		self.model.privatePhone = self.contParser.privatePhone
+		self.model.mobilePhone = self.contParser.mobilePhone
+		# Executive summary and objective
+		self.model.execS = self.execSumParser.execS
+		self.model.objct = self.execSumParser.objct
+		# Employment history
+		self.model.empl = self.emplParser.empl
+		# Education history
+		self.model.edu = self.eduParser.edu
+		# Licenses and certifications
+		self.model.cert = self.certParser.cert
+		# Qualifications (skills)
+		self.model.skil = self.skilParser.skil
+		# Languages
+		self.model.lang = self.langParser.lang
+		# References
+		self.model.ref = self.refParser.ref
+		# Additional items
+		self.model.addt = self.addtlParser.addt
 		return self.model
 ###   HrXmlResumeParser end ###
 

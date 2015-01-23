@@ -96,8 +96,10 @@ class ContactInfoParser(BaseParser):
 					buildingNumber = elem.text
 				elif tag == 'Telephone' and contMethUse == 'personal':
 					isTelephone = True
-				elif tag == 'Mobile' and contMethUse == 'personal':
+					isMobile = False
+				elif tag == 'Mobile':
 					isMobile = True
+					isTelephone = False
 				elif tag == 'FormattedNumber' and isTelephone:
 					self.privatePhone = elem.text
 					isTelephone = False
@@ -142,35 +144,43 @@ if __name__ == "__main__":
 	root = etree.fromstring(testPersonXml)
 	parser.personNameParse(root)
 	testContactXml = """
-	<ContactMethod>
-		<Use>personal</Use>
-		<Location>home</Location>
-		<WhenAvailable>evenings</WhenAvailable>
-		<Mobile smsEnabled="true">
-			<FormattedNumber>+41 (0)76 456 7890</FormattedNumber>
-		</Mobile>
-		<Telephone>
-			<FormattedNumber>+41 (0)43 123 4567</FormattedNumber>
-		</Telephone>
-		<InternetEmailAddress>bbagins@gmail.com</InternetEmailAddress>
-		<PostalAddress type="streetAddress">
-			<CountryCode>CH</CountryCode>
-			<PostalCode>8123</PostalCode>
-			<Region>Zürich</Region>
-			<Municipality>Oerlikon</Municipality>
-			<DeliveryAddress>
-				<StreetName>Akaciastrasse</StreetName>
-				<BuildingNumber>3</BuildingNumber>
-			</DeliveryAddress>
-			<Recipient>
-				<PersonName>
-					<FormattedName>Bilbo Bagins</FormattedName>
-				</PersonName>
-				<AdditionalText/>
-				<OrganizationName/>
-			</Recipient>
-		</PostalAddress>
-	</ContactMethod>
+	<ContactInfo>
+		<ContactMethod>
+			<Use>personal</Use>
+			<Location>home</Location>
+			<WhenAvailable>evenings</WhenAvailable>
+			<Telephone>
+				<FormattedNumber>+41 (0)43 123 4567</FormattedNumber>
+			</Telephone>
+			<InternetEmailAddress>bbagins@gmail.com</InternetEmailAddress>
+			<PostalAddress type="streetAddress">
+				<CountryCode>CH</CountryCode>
+				<PostalCode>8123</PostalCode>
+				<Region>Zürich</Region>
+				<Municipality>Oerlikon</Municipality>
+				<DeliveryAddress>
+					<StreetName>Akaciastrasse</StreetName>
+					<BuildingNumber>3</BuildingNumber>
+				</DeliveryAddress>
+				<Recipient>
+					<PersonName>
+						<FormattedName>Bilbo Bagins</FormattedName>
+					</PersonName>
+					<AdditionalText/>
+					<OrganizationName/>
+				</Recipient>
+			</PostalAddress>
+		</ContactMethod>
+		
+		<ContactMethod>
+			<Use>business</Use>
+			<Location>onPerson</Location>
+			<WhenAvailable>weekdays</WhenAvailable>
+			<Mobile smsEnabled="true">
+				<FormattedNumber>+41 (0)76 456 7890</FormattedNumber>
+			</Mobile>
+		</ContactMethod>
+	</ContactInfo>
 	"""
 	root = etree.fromstring(testContactXml)
 	parser.contactMethodParse(root)

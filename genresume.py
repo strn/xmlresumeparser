@@ -9,6 +9,12 @@ import sys
 
 
 HELPTEXT = "%s <options>" % os.path.normpath(sys.argv[0])
+# Dictionary with resume types and their display names
+RESTYPES = {
+	'hrxml' : 'HrXml',
+	'xmlres' : 'XmlResume',
+	'europass' : 'Europass',
+}
 
 if __name__ == "__main__":
 	parser = optparse.OptionParser(usage=HELPTEXT)
@@ -24,15 +30,11 @@ if __name__ == "__main__":
 		help='Lists available writers for given resume type. After listing them, program will exit.')
 	options, args = parser.parse_args()
 	
-	if   options.resumeType == 'hrxml':
-		resTypeDisplayName = 'HrXml'
-	elif options.resumeType == 'xmlres':
-		resTypeDisplayName = 'XmlResume'
-	elif options.resumeType == 'europass':
-		resTypeDisplayName = 'Europass'
-	else:
+	try:
+		resTypeDisplayName = RESTYPES[ options.resumeType ]
+	except KeyError:
 		print " "
-		print "Supported resume types are: 'hrxml', 'xmlres' and 'europass'."
+		print "Supported resume types are: %s." % RESTYPES.keys()
 		print "Unknown resume type '%s', aborting ..." % options.resumeType
 		sys.exit(1)
 	writerBase = 'ResumeWriter.' + resTypeDisplayName
