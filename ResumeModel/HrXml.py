@@ -41,7 +41,7 @@ class HrXml:
 		cnt = "Contact info: personName='%s', alternateScript='%s', alternateName='%s', privateEmailAddress='%s', businessEmailAddress='%s', streetAddress='%s', countryCode='%s', postalCode='%s', region='%s', municipality='%s', privatePhone='%s', mobilePhone='%s'" % (self.personName, self.altScript, self.alternateName, self.privateEmailAddress, \
 			self.businessEmailAddress, self.streetAddress, self.countryCode, self.postalCode, \
 			self.region, self.municipality,	self.privatePhone, self.mobilePhone)
-		ex = "Executive summary: '%s', objective='%s'" % (self.execS, self.objct)
+		ex = "Executive summary: execS='%s', objective='%s'" % (self.execS, self.objct)
 		emp = "Employment history: %s" % self.empl
 		edu = "Education history: %s" % self.edu
 		cert = "Licenses/certificates: %s" % self.cert
