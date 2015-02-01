@@ -29,11 +29,11 @@ class BaseWriter:
 			
 
 	def wr(self, s):
-		self.outFile.write(s)
+		self.outFile.write(s.encode('utf-8'))
 
 
 	def wrln(self, s):
-		self.outFile.write(s + '\n')
+		self.wr(s + '\n')
 
 
 	def lookup(self, lang, *arg):
