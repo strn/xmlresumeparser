@@ -46,7 +46,7 @@ class ResumeWriter(BaseWriter):
 		self.wrln( ":doctype: article" )
 		self.wrln( ":encoding: UTF-8" )
 		self.wrln( ":stylesdir: ResumeStyle" )
-		#self.wrln( ":theme: default" )
+		self.wrln( ":stylesheet: BaseAsciiDoc.css" )
 		self.wrln( ":disable-javascript:" ) # Javascript is in most cases NOT required in CV
 		self.wrln( ":linkcss:" )
 		keyLine = ""
@@ -97,12 +97,14 @@ class ResumeWriter(BaseWriter):
 		numJobs = len(model.empl)
 		# Print details of only most recent jobs (0 to jobDivide-1)
 		# for other jobs list only employer, start and end dates
+		self.wrln( '[width="100%",cols="70%%,30%%", grid="none", frame="none"]' )
+		self.wrln( '|=======================================================' )
 		for i in range(0, self.jobDivide):
 			job = model.empl[i]
 			country = self.lookup( self.lang, countryMap, job['cntr'] )
 			#pprint( job )
-			self.wrln( '*%s*, %s, %s' % (job['name'], job['city'], country) )
-			self.wrln( "" )
+			self.wrln( '2+<|*%s*, %s, %s' % (job['name'], job['city'], country) )
+			#self.wrln( "|" )
 			for pos in job['job']:
 				#self.wrln( str(pos) )
 				if pos.has_key( 'end' ):
@@ -113,34 +115,39 @@ class ResumeWriter(BaseWriter):
 					dept = '' 
 				else:
 					dept = ' (%s)' % pos[ 'dept' ]
-				self.wrln( '_%s%s_ %s - %s' % (pos['title'], dept, pos['start'], endDate) )
-				self.wrln( "" )
+				self.wrln( '<|%s%s >|_%s - %s_' % (pos['title'], dept, pos['start'], endDate) )
+				self.wrln( "2+a|" )
 				for line in pos[ 'desc' ]:
 					self.wrln( "  " + line )
-				self.wrln( "" )
-		self.wrln( "" )
+				#self.wrln( "|" )
+		#self.wrln( "|" )
 		for i in range(self.jobDivide, numJobs):
 			job = model.empl[i]
 			country = self.lookup( self.lang, countryMap, job['cntr'] )
-			self.wrln( '*%s*, %s, %s +' % (job['name'], job['city'], country) )
-			self.wrln( '_%s_ %s - %s +' % (job['job'][0]['title'], job['job'][0]['start'], job['job'][0]['end']) )
-			self.wrln( "" )
-			self.wrln( "" )
-
+			self.wrln( '2+<|*%s*, %s, %s' % (job['name'], job['city'], country) )
+			self.wrln( '<|%s >|_%s - %s_' % (job['job'][0]['title'], job['job'][0]['start'], job['job'][0]['end']) )
+			#self.wrln( "" )
+			#self.wrln( "" )
+		self.wrln( '|=======================================================' )
+		self.wrln( "" )
+		
 
 	def writeCertifications(self, model):
 		self.wrln( '== Certifications ==' )
 		for cert in model.cert:
-			self.wrln( "* %s (%s)" % (cert[ 'name' ], cert[ 'issued' ]) )
+			self.wrln( "* %s _(%s)_" % (cert[ 'name' ], cert[ 'issued' ]) )
 		self.wrln( "" )
 		
 		
 	def writeEducation(self, model):
 		self.wrln( '== Education ==' )
+		self.wrln( '[width="100%",cols="<70%,>30%", grid="none", frame="none"]' )
+		self.wrln( '|=============' )
 		for edu in model.edu:
 			country = self.lookup( self.lang, countryMap, edu[ 'cntr' ] )
-			self.wrln( '* *%s*, %s, %s, %s (%s - %s)' % \
+			self.wrln( '|*%s*, %s, %s, %s |_(%s - %s)_' % \
 				(edu[ 'school' ], edu[ 'orgunit' ], edu[ 'city' ], country, edu[ 'start' ], edu[ 'end' ]) )
+		self.wrln( '|=============' )
 		self.wrln( "" )
 		
 		
