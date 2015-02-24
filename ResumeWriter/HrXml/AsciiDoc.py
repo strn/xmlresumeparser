@@ -37,6 +37,7 @@ class ResumeWriter(BaseWriter):
 		self.writeLanguages(model)
 		self.writeHobbies(model)
 		self.writeReferences(model)
+		self.writeFooter(model)
 		
 
 	def writeHeader(self, model):
@@ -46,9 +47,11 @@ class ResumeWriter(BaseWriter):
 		self.wrln( ":doctype: article" )
 		self.wrln( ":encoding: UTF-8" )
 		self.wrln( ":stylesdir: ResumeStyle" )
-		self.wrln( ":stylesheet: BaseAsciiDoc.css" )
+		self.wrln( ":stylesheet: BaseAsciiDoc-print.css" )
 		self.wrln( ":disable-javascript:" ) # Javascript is in most cases NOT required in CV
 		self.wrln( ":linkcss:" )
+		self.wrln( ":last-update-label!:" )
+		self.wrln( ":footer: Test" )
 		keyLine = ""
 		for skilLine in model.skil:
 			keyLine += ", ".join(skilLine[1:]) + ", "
@@ -56,15 +59,20 @@ class ResumeWriter(BaseWriter):
 		self.wrln( "" )
 
 
+	def writeFooter(self, model):
+		#self.wrln( "include::ResumeStyle/AsciiDoc-footer.html[]" )
+		pass
+
+
 	def writeAddress(self, model):
 		# Table for contact data
 		self.wrln( '[width="100%", cols="<,>", grid="none", frame="none"]' )
 		self.wrln( '|=============' )
-		self.wrln( '|%s | home tel. number: %s' % (model.streetAddress, model.privatePhone) )
-		self.wrln( '|%s %s, %s | mobile tel. number: %s' % (model.postalCode, model.municipality, model.region, model.mobilePhone,) )
+		self.wrln( '|%s | mobile tel. number: *%s*' % (model.streetAddress, model.mobilePhone,) )
+		self.wrln( '|%s %s, %s | email address: %s' % (model.postalCode, model.municipality, model.region, model.privateEmailAddress,) )
 		# Look up country based on country code
 		country = self.lookup( self.lang, countryMap, model.countryCode )
-		self.wrln( '|%s | email address: %s' % (country, model.privateEmailAddress,) )
+		self.wrln( '|%s | ' % (country,) )
 		self.wrln( '|=============' )
 		self.wrln( "" )
 
@@ -84,10 +92,11 @@ class ResumeWriter(BaseWriter):
 		
 	def writeSkills(self, model):
 		self.wrln( '== Skills ==' )
-		self.wrln( '[width="100%",cols="30s,70", grid="none", frame="none"]' )
+		self.wrln( '[width="100%",cols="25s,75", grid="none", frame="none"]' )
 		self.wrln( '|=============' )
 		for skilLine in model.skil:
 			self.wrln( "|%s:|%s" % (skilLine[0], ", ".join(skilLine[1:])) )
+		self.wrln( '| | ' )
 		self.wrln( '|=============' )
 		self.wrln( "" )
 
@@ -97,13 +106,13 @@ class ResumeWriter(BaseWriter):
 		numJobs = len(model.empl)
 		# Print details of only most recent jobs (0 to jobDivide-1)
 		# for other jobs list only employer, start and end dates
-		self.wrln( '[width="100%",cols="70%%,30%%", grid="none", frame="none"]' )
+		self.wrln( '[width="100%",cols="70%,30%", grid="none", frame="none"]' )
 		self.wrln( '|=======================================================' )
 		for i in range(0, self.jobDivide):
 			job = model.empl[i]
 			country = self.lookup( self.lang, countryMap, job['cntr'] )
 			#pprint( job )
-			self.wrln( '2+<|*%s*, %s, %s' % (job['name'], job['city'], country) )
+			self.wrln( '2+<|[companyname]*%s*, %s, %s' % (job['name'], job['city'], country) )
 			#self.wrln( "|" )
 			for pos in job['job']:
 				#self.wrln( str(pos) )
@@ -124,10 +133,11 @@ class ResumeWriter(BaseWriter):
 		for i in range(self.jobDivide, numJobs):
 			job = model.empl[i]
 			country = self.lookup( self.lang, countryMap, job['cntr'] )
-			self.wrln( '2+<|*%s*, %s, %s' % (job['name'], job['city'], country) )
+			self.wrln( '2+<|[companyname]*%s*, %s, %s' % (job['name'], job['city'], country) )
 			self.wrln( '<|%s >|_%s - %s_' % (job['job'][0]['title'], job['job'][0]['start'], job['job'][0]['end']) )
-			#self.wrln( "" )
-			#self.wrln( "" )
+			self.wrln( "| | " )
+			self.wrln( "| | " )
+			self.wrln( "| | " )
 		self.wrln( '|=======================================================' )
 		self.wrln( "" )
 		
@@ -136,6 +146,7 @@ class ResumeWriter(BaseWriter):
 		self.wrln( '== Certifications ==' )
 		for cert in model.cert:
 			self.wrln( "* %s _(%s)_" % (cert[ 'name' ], cert[ 'issued' ]) )
+		self.wrln( "" )
 		self.wrln( "" )
 		
 		
