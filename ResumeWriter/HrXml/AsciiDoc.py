@@ -51,7 +51,6 @@ class ResumeWriter(BaseWriter):
 		self.wrln( ":disable-javascript:" ) # Javascript is in most cases NOT required in CV
 		self.wrln( ":linkcss:" )
 		self.wrln( ":last-update-label!:" )
-		self.wrln( ":footer: Test" )
 		keyLine = ""
 		for skilLine in model.skil:
 			keyLine += ", ".join(skilLine[1:]) + ", "

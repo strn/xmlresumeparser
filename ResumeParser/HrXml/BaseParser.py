@@ -42,7 +42,7 @@ class BaseParser:
 		Returns: date converted to human readable form
 		"""
 		dateList = date.split( '-' )
-		return '%s %s' % ( monthDict[lang][int(dateList[1])], dateList[0] )
+		return '%s %s' % ( monthDict[lang][int(dateList[1])-1], dateList[0] )
 
 
 if __name__ == "__main__":
