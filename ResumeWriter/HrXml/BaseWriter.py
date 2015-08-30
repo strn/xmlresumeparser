@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import datetime
+import locale
 
 
 class BaseWriter:
@@ -62,3 +64,9 @@ class BaseWriter:
 			sys.exit(3)
 		return retVal
 	
+
+	def getNLDate(self, aDate, aLang):
+		locale.setlocale(locale.LC_TIME, aLang)
+		format_ = datetime.datetime.strptime(aDate, '%Y-%m-%d').strftime('%x')
+		format_u = format_.decode(locale.getlocale()[1])
+		return format_u

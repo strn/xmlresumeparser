@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from BaseParser import BaseParser
+from lxml.etree import Comment
 
 
 class EducationHistoryParser(BaseParser):
@@ -22,6 +23,8 @@ class EducationHistoryParser(BaseParser):
 
 		for educ in eduList:
 			for elem in educ.iter():
+				if elem.tag is Comment:
+					continue
 				tag = self.removeNS(elem.tag)
 				if tag == 'SchoolOrInstitution' and eduDict != {}:
 					self.edu.append( eduDict )

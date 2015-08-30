@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from BaseParser import BaseParser
+from lxml.etree import Comment
 
 
 class ContactInfoParser(BaseParser):
@@ -33,6 +34,8 @@ class ContactInfoParser(BaseParser):
 		altSurname = ''
 		for personName in nameList:
 			for elem in personName.iter():
+				if elem.tag is Comment:
+					continue
 				tag = self.removeNS(elem.tag)
 				if tag == 'FormattedName':
 					if self.altScript == '':

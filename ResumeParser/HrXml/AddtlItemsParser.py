@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from BaseParser import BaseParser
+from lxml.etree import Comment
 
 
 class AddtlItemsParser(BaseParser):
@@ -21,6 +22,8 @@ class AddtlItemsParser(BaseParser):
 		
 		for item in addtList:
 			for elem in item.iter():
+				if elem.tag is Comment:
+					continue
 				tag = self.removeNS(elem.tag)
 				if tag == 'ResumeAdditionalItem':
 					itemType = elem.attrib.get( 'type' )

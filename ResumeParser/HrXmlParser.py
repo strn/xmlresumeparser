@@ -6,7 +6,7 @@ from lxml import etree
 
 from HrXml import AddtlItemsParser, CertificationParser, ContactInfoParser, EducationHistoryParser
 from HrXml import EmploymentHistoryParser, ExecutiveSummaryParser, LanguageParser, QualificationsParser
-from HrXml import ReferenceParser
+from HrXml import ReferenceParser, NonXmlResumeParser, PersonalDataParser
 from ResumeModel import HrXml
 from Util.Namespace import NAMESPACEMAP
 
@@ -18,25 +18,29 @@ class ResumeParser():
 		self.input = codecs.open( inputFile, 'rb', 'utf-8' )
 		self.root = etree.parse(inputFile).getroot()
 		self.model = HrXml.HrXml()
-		self.certXPath = '/ns:Resume/ns:StructuredXMLResume/ns:LicensesAndCertifications/ns:LicenseOrCertification'
+		self.persDataXPath = '/ns:Candidate/ns:CandidateProfile/ns:PersonalData'
+		self.persDataParser = PersonalDataParser.PersonalDataParser()
+		self.certXPath = '/ns:Candidate/ns:Resume/ns:StructuredXMLResume/ns:LicensesAndCertifications/ns:LicenseOrCertification'
 		self.certParser = CertificationParser.CertificationParser()
-		self.contMethXPath = '/ns:Resume/ns:StructuredXMLResume/ns:ContactInfo/ns:ContactMethod'
-		self.persNameXpath = '/ns:Resume/ns:StructuredXMLResume/ns:ContactInfo/ns:PersonName'
+		self.contMethXPath = '/ns:Candidate/ns:Resume/ns:StructuredXMLResume/ns:ContactInfo/ns:ContactMethod'
+		self.persNameXpath = '/ns:Candidate/ns:Resume/ns:StructuredXMLResume/ns:ContactInfo/ns:PersonName'
 		self.contParser = ContactInfoParser.ContactInfoParser()
-		self.execSumXPath = '/ns:Resume/ns:StructuredXMLResume/ns:ExecutiveSummary'
+		self.execSumXPath = '/ns:Candidate/ns:Resume/ns:StructuredXMLResume/ns:ExecutiveSummary'
 		self.execSumParser = ExecutiveSummaryParser.ExecutiveSummaryParser()
-		self.employmentXPath = '/ns:Resume/ns:StructuredXMLResume/ns:EmploymentHistory/ns:EmployerOrg'
+		self.employmentXPath = '/ns:Candidate/ns:Resume/ns:StructuredXMLResume/ns:EmploymentHistory/ns:EmployerOrg'
 		self.emplParser = EmploymentHistoryParser.EmploymentHistoryParser()
-		self.eduXPath = '/ns:Resume/ns:StructuredXMLResume/ns:EducationHistory/ns:SchoolOrInstitution'
+		self.eduXPath = '/ns:Candidate/ns:Resume/ns:StructuredXMLResume/ns:EducationHistory/ns:SchoolOrInstitution'
 		self.eduParser = EducationHistoryParser.EducationHistoryParser()
-		self.langXPAth = '/ns:Resume/ns:StructuredXMLResume/ns:Languages/ns:Language'
+		self.langXPAth = '/ns:Candidate/ns:Resume/ns:StructuredXMLResume/ns:Languages/ns:Language'
 		self.langParser = LanguageParser.LanguageParser()
-		self.skilXPath = '/ns:Resume/ns:StructuredXMLResume/ns:Qualifications/ns:Competency'
+		self.skilXPath = '/ns:Candidate/ns:Resume/ns:StructuredXMLResume/ns:Qualifications/ns:Competency'
 		self.skilParser = QualificationsParser.QualificationsParser()
-		self.refXPath = '/ns:Resume/ns:StructuredXMLResume/ns:References/ns:Reference'
+		self.refXPath = '/ns:Candidate/ns:Resume/ns:StructuredXMLResume/ns:References/ns:Reference'
 		self.refParser  = ReferenceParser.ReferenceParser()
-		self.addtlXPath = '/ns:Resume/ns:StructuredXMLResume/ns:ResumeAdditionalItems/ns:ResumeAdditionalItem'
+		self.addtlXPath = '/ns:Candidate/ns:Resume/ns:StructuredXMLResume/ns:ResumeAdditionalItems/ns:ResumeAdditionalItem'
 		self.addtlParser = AddtlItemsParser.AddtlItemsParser()
+		self.nonResXPath = '/ns:Candidate/ns:Resume/ns:NonXMLResume/ns:SupportingMaterials'
+		self.nonResXmlParser = NonXmlResumeParser.NonXmlResumeParser()
 		
 
 	def __del__(self):
@@ -44,12 +48,18 @@ class ResumeParser():
 
 
 	def parse(self):
+		# Personal data
+		persDataList = self.root.xpath(self.persDataXPath, namespaces = NAMESPACEMAP)
+		self.persDataParser.parse( persDataList )
 		# Personal name
 		nameList = self.root.xpath(self.persNameXpath, namespaces = NAMESPACEMAP)
 		self.contParser.personNameParse( nameList )
 		# Contact methods
 		methodList = self.root.xpath(self.contMethXPath, namespaces = NAMESPACEMAP)
 		self.contParser.contactMethodParse( methodList )
+		# Contact data
+		contDataList = self.root.xpath(self.nonResXPath, namespaces = NAMESPACEMAP)
+		self.nonResXmlParser.parse( contDataList )
 		# Executive summary and objective
 		execSumList = self.root.xpath(self.execSumXPath, namespaces = NAMESPACEMAP)
 		self.execSumParser.parse( execSumList )
@@ -79,6 +89,10 @@ class ResumeParser():
 	def getModel(self):
 		# Copy all fields to model
 		#
+		# Personal data
+		self.model.dateOfBirth = self.persDataParser.dateOfBirth
+		self.model.nationality = self.persDataParser.nationality
+		self.model.maritalStatus = self.persDataParser.maritalStatus
 		# Contact info
 		self.model.personName = self.contParser.personName
 		self.model.altScript = self.contParser.altScript
@@ -92,6 +106,10 @@ class ResumeParser():
 		self.model.municipality = self.contParser.municipality
 		self.model.privatePhone = self.contParser.privatePhone
 		self.model.mobilePhone = self.contParser.mobilePhone
+		# Person photo and description
+		self.model.personPhoto = self.nonResXmlParser.personPhoto
+		self.model.personPhotoType = self.nonResXmlParser.personPhotoType
+		self.model.personPhotoDesc = self.nonResXmlParser.personPhotoDesc
 		# Executive summary and objective
 		self.model.execS = self.execSumParser.execS
 		self.model.objct = self.execSumParser.objct

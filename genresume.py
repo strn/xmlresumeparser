@@ -11,8 +11,8 @@ import sys
 HELPTEXT = "%s <options>" % os.path.normpath(sys.argv[0])
 # Dictionary with resume types and their display names
 RESTYPES = {
-	'hrxml' : 'HrXml',
-	'xmlres' : 'XmlResume',
+	'hrxml'    : 'HrXml',
+	'xmlres'   : 'XmlResume',
 	'europass' : 'Europass',
 }
 
@@ -22,6 +22,8 @@ if __name__ == "__main__":
 		help="Name of resume in XML format that will be processed")
 	parser.add_option("-o", "--output", action="store", type="string", dest="resumeOutputFile",
 		help="Name of output file (STDOUT if not specified)")
+	parser.add_option("-p", "--photo", action="store_true", dest="resumePhoto", default=False,
+		help="Whether to print photo or not")
 	parser.add_option("-t", "--type", action="store", type="string", dest="resumeType",
 		help="Resume type: HR-XML (xhrml), XmlResume (xmlres) or Europass (europass)")
 	parser.add_option("-w", "--writer", action="store", type="string", dest="writer",
@@ -75,4 +77,4 @@ if __name__ == "__main__":
 	writer = modWriter.ResumeWriter( options.resumeOutputFile )
 	parser.parse()
 	model = parser.getModel()
-	writer.write(model)
+	writer.write(model=model, withPhoto=options.resumePhoto)

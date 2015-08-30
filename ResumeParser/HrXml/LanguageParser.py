@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from BaseParser import BaseParser
+from lxml.etree import Comment
 
 
 class LanguageParser(BaseParser):
@@ -21,6 +22,8 @@ class LanguageParser(BaseParser):
 		
 		for lang in langList:
 			for elem in lang.iter():
+				if elem.tag is Comment:
+					continue
 				tag = self.removeNS(elem.tag)
 				if tag == 'Language' and langDict != {}:
 					self.lang.append( langDict )

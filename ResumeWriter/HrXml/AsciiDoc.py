@@ -3,7 +3,7 @@
 
 import sys
 from BaseWriter import BaseWriter
-from ResumeWriter.Util.Lookup import countryMap, langMap, presMap
+from ResumeWriter.Util.Lookup import countryMap, langMap, presMap, emailAddrMap, mobileNumberMap, dobMap, nationalityMap, maritalStatusMap, citizenshipMap, swissPermitMap
 from pprint import pprint
 
 
@@ -22,11 +22,12 @@ class ResumeWriter(BaseWriter):
 		self.jobDivide = 2
 
 
-	def write(self, model=None, lang='en'):
+	def write(self, model=None, lang='en', withPhoto=False):
 		if model == None:
 			self.wrln( "Empty resume model." )
 			return
 		self.lang = lang
+		self.withPhoto = withPhoto
 		self.writeHeader(model)
 		self.writeAddress(model)
 		self.writeSummary(model)
@@ -52,8 +53,8 @@ class ResumeWriter(BaseWriter):
 		self.wrln( ":linkcss:" )
 		self.wrln( ":last-update-label!:" )
 		keyLine = ""
-		for skilLine in model.skil:
-			keyLine += ", ".join(skilLine[1:]) + ", "
+		for skilGroup in model.skil.values():
+			keyLine += ", ".join(skilGroup[ 'skills' ].keys()) + ", "
 		self.wrln( ":keywords: CV, HR-XML, " + keyLine[:-2] )
 		self.wrln( "" )
 
@@ -65,13 +66,34 @@ class ResumeWriter(BaseWriter):
 
 	def writeAddress(self, model):
 		# Table for contact data
-		self.wrln( '[width="100%", cols="<,>", grid="none", frame="none"]' )
+		if self.withPhoto:
+			colsFrm = '20%,35%,35%'
+		else:
+			colsFrm = '50%,50%'
+		self.wrln( '[width="100%%", cols="%s", grid="none", frame="none"]' % colsFrm )
 		self.wrln( '|=============' )
-		self.wrln( '|%s | mobile tel. number: *%s*' % (model.streetAddress, model.mobilePhone,) )
-		self.wrln( '|%s %s, %s | email address: %s' % (model.postalCode, model.municipality, model.region, model.privateEmailAddress,) )
+		if self.withPhoto:
+			self.wrln( '.10+|image:%s[title="%s"]' % (model.personPhoto, model.personPhotoDesc))
+		emailAddr = self.lookup( self.lang, emailAddrMap )
+		mobileNum = self.lookup( self.lang, mobileNumberMap )
+		self.wrln( '|%s >| %s: *%s*' % (model.streetAddress, mobileNum, model.mobilePhone,) )
+		self.wrln( '|%s %s, %s >| %s: *%s*' % \
+			(model.postalCode, model.municipality, model.region, emailAddr, model.privateEmailAddress,) )
 		# Look up country based on country code
 		country = self.lookup( self.lang, countryMap, model.countryCode )
 		self.wrln( '|%s | ' % (country,) )
+		self.wrln( "| | " )
+		self.wrln( "| | " )
+		self.wrln( "| | " )
+		dobLbl = self.lookup( self.lang, dobMap )
+		self.wrln( '| >|%s: %s' % (dobLbl, model.dateOfBirth) )
+		ctznLbl = self.lookup( self.lang, nationalityMap )
+		nationality = self.lookup( self.lang, citizenshipMap, model.nationality )
+		self.wrln( '| >|%s: %s' % (ctznLbl, nationality) )
+		maritalLbl = self.lookup( self.lang, maritalStatusMap )
+		self.wrln( '| >|%s: %s' % (maritalLbl, model.maritalStatus ) )
+		swissPermit = self.lookup( self.lang, swissPermitMap )
+		self.wrln( '| >|%s: *C*' % ( swissPermit ) )
 		self.wrln( '|=============' )
 		self.wrln( "" )
 
@@ -93,15 +115,19 @@ class ResumeWriter(BaseWriter):
 		self.wrln( '== Skills ==' )
 		self.wrln( '[width="100%",cols="25s,75", grid="none", frame="none"]' )
 		self.wrln( '|=============' )
-		for skilLine in model.skil:
-			self.wrln( "|%s:|%s" % (skilLine[0], ", ".join(skilLine[1:])) )
+		# Get skills order and sort it
+		skillIds = sorted(model.skil.keys())
+		for skilId in skillIds:
+			skilGroupName = model.skil[ skilId ][ 'skillGroup' ]
+			skills = model.skil[ skilId ][ 'skills' ]
+			self.wrln( "|%s:|%s" % (skilGroupName, ", ".join(skills.keys())) )
 		self.wrln( '| | ' )
 		self.wrln( '|=============' )
 		self.wrln( "" )
 
 
 	def writeEmployment(self, model):
-		self.wrln( '== Employment ==' )
+		self.wrln( '== Professional Experience ==' )
 		numJobs = len(model.empl)
 		# Print details of only most recent jobs (0 to jobDivide-1)
 		# for other jobs list only employer, start and end dates
@@ -155,7 +181,7 @@ class ResumeWriter(BaseWriter):
 		self.wrln( '|=============' )
 		for edu in model.edu:
 			country = self.lookup( self.lang, countryMap, edu[ 'cntr' ] )
-			self.wrln( '|*%s*, %s, %s, %s |_(%s - %s)_' % \
+			self.wrln( '|*%s*, %s (%s, %s) |_%s - %s_' % \
 				(edu[ 'school' ], edu[ 'orgunit' ], edu[ 'city' ], country, edu[ 'start' ], edu[ 'end' ]) )
 		self.wrln( '|=============' )
 		self.wrln( "" )
