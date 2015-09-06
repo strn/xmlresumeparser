@@ -93,6 +93,7 @@ class ResumeParser():
 		self.model.dateOfBirth = self.persDataParser.dateOfBirth
 		self.model.nationality = self.persDataParser.nationality
 		self.model.maritalStatus = self.persDataParser.maritalStatus
+		self.model.birthPlace = self.persDataParser.birthPlace
 		# Contact info
 		self.model.personName = self.contParser.personName
 		self.model.altScript = self.contParser.altScript

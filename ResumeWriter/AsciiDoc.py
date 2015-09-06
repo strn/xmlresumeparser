@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from   pprint import pprint
 import sys
-from BaseWriter import BaseWriter
+from   BaseWriter import BaseWriter
 import ResumeWriter.Util.Lookup as Lkp
-from pprint import pprint
 
 
 class ResumeWriter(BaseWriter):
@@ -16,13 +16,24 @@ class ResumeWriter(BaseWriter):
 	def __init__(self, filename=None):
 		# This number says how many jobs in job history
 		# will be listed in full (with all details)
-		# The rest will be mentioned just by employer
-		# name
-		BaseWriter.__init__(self, filename)
+		# The rest will be mentioned just by employer name
+		if filename == None:
+			self.outFile = sys.stdout
+		else:
+			try:
+				self.outFile = open( filename + ".adoc", 'wb' )
+			except IOError:
+				print "(E) Unable to open file '%s' for output, exiting ..." % filename
+				sys.exit(2)
 		self.jobDivide = 2
 		self.scrSgn = '~' # Script sign: ~ for subscripts, ^ for superscript
 
 
+	def __del__(self):
+		if self.outFile != sys.stdout:
+			self.outFile.close()
+
+	
 	def write(self, model=None, lang='en_GB', withPhoto=False, personalData=False, experience=False):
 		if model == None:
 			self.wrln( "Empty resume model." )
@@ -156,7 +167,10 @@ class ResumeWriter(BaseWriter):
 					if not yearLast is None:
 						# Last used year is an actual value
 						yearStart = self.getNLYear( self.lang, skillDict[ 'started' ] )
-						return '%s %s%s%s - %s%s%s' % ( skillName, self.scrSgn, yearStart, self.scrSgn, self.scrSgn, yearLast, self.scrSgn )
+						if yearStart == yearLast:
+							return '%s %s%s%s' % ( skillName, self.scrSgn, yearStart, self.scrSgn )
+						else:
+							return '%s %s%s-%s%s' % ( skillName, self.scrSgn, yearStart, yearLast, self.scrSgn )
 					else:
 						since = self.lookup( self.lang, Lkp.sinceMap )
 						return '%s %s%s%s %s%s%s' % ( skillName, self.scrSgn, since, self.scrSgn, self.scrSgn, yearStart, self.scrSgn )
@@ -255,4 +269,11 @@ class ResumeWriter(BaseWriter):
 		self.wrln( '== References ==' )
 		self.wrln( self.lookup(self.lang, Lkp.referenceRequestMap) )
 		self.wrln( "" )
-		
+
+
+	def wr(self, s):
+		self.outFile.write(s.encode('utf-8'))
+
+
+	def wrln(self, s):
+		self.wr(s + '\n')

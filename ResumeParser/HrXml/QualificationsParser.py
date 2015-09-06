@@ -14,12 +14,17 @@ class QualificationsParser(BaseParser):
 	def __init__(self):
 		self.skil = {}
 		self.skilGroup = []
+		# Arbitrary taken value that represents ID for years of experience
+		# Change as you wish, to correspond to values in your XML document
+		self.yearsExpTypeId = '7'
 
 
 	def parse(self, skilList):
 		if skilList == []:
 			return
 		skillDict = {}
+		compEvTypeId = ''
+		evidenceId = ''
 		
 		for skil in skilList:
 			for elem in skil.iter():
@@ -45,8 +50,24 @@ class QualificationsParser(BaseParser):
 				elif tag == 'CompetencyEvidence':
 					lastUsed = elem.attrib.get( 'lastUsed' )
 					started = elem.attrib.get( 'dateOfIncident' )
+					required = elem.attrib.get( 'required' )
+					compEvTypeId = elem.attrib.get( 'typeId' )
 					self.skil[ taxGroupId ][ 'skills' ][ skill ][ 'started' ] = started
 					self.skil[ taxGroupId ][ 'skills' ][ skill ][ 'lastUsed' ] = lastUsed
+					self.skil[ taxGroupId ][ 'skills' ][ skill ][ 'required' ] = required
+				elif tag == 'NumericValue':
+					# See what previous tag is
+					parentTag = self.removeNS( elem.getparent().tag )
+					if parentTag == 'CompetencyWeight':
+						# Add attributes and text as mesurement of competency
+						self.skil[ taxGroupId ][ 'skills' ][ skill ][ 'compLvlMin' ] =  elem.attrib.get( 'minValue' )
+						self.skil[ taxGroupId ][ 'skills' ][ skill ][ 'compLvlMax' ] =  elem.attrib.get( 'maxValue' )
+						self.skil[ taxGroupId ][ 'skills' ][ skill ][ 'compLvl' ] = elem.text
+					elif parentTag == 'CompetencyEvidence':
+						if compEvTypeId == evidenceId == self.yearsExpTypeId:
+							self.skil[ taxGroupId ][ 'skills' ][ skill ][ 'yrsExp' ] = elem.text
+				elif tag == 'EvidenceId':
+					evidenceId = elem.attrib.get( 'id' )
 				#print "%s (%d): %s" % (tag, len(elem), name)
 		### for
 		#self.skil.append( tmpList )
@@ -61,6 +82,7 @@ if __name__ == "__main__":
 	# Run test if invoked as a program
 	from lxml import etree
 	from pprint import pprint
+	
 	testXml = """
 	<Qualifications>
 		<Competency name="Operating systems">
@@ -89,15 +111,17 @@ if __name__ == "__main__":
 			<Competency name="JSE 1.4">
 				<TaxonomyId idOwner="Skill" id="" />
 				<CompetencyEvidence dateOfIncident="2001-08-23" name="Years of Experience" typeDescription="Years of Experience" typeId="7" lastUsed="2001-08-23">
-					<EvidenceId description="Years of Experience in Competency" id="7" idOwner="Self"/>
+					<EvidenceId description="Years of Experience in Competency" id="7" idOwner="Self" />
 					<NumericValue description="Range in years for experience">4</NumericValue>
 				</CompetencyEvidence>
 				<CompetencyWeight type="skillLevel">
-					<NumericValue description="1" maxValue="10" minValue="0">90</NumericValue>
+					<NumericValue description="1" maxValue="10" minValue="1">9</NumericValue>
 		       </CompetencyWeight>
 			</Competency>
 			<Competency name="JEE">
 				<TaxonomyId idOwner="Skill" id="" />
+				<CompetencyEvidence dateOfIncident="2001-08-23" name="Years of Experience" typeDescription="Years of Experience" typeId="7">
+				</CompetencyEvidence>
 			</Competency>
 			<Competency name="JavaScript">
 				<TaxonomyId idOwner="Skill" id="" />
