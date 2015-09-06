@@ -14,6 +14,7 @@ class PersonalDataParser(BaseParser):
 		self.dateOfBirth = ''
 		self.nationality = ''
 		self.maritalStatus = ''
+		self.birthPlace = ''
 	
 	
 	def parse(self, persDataList):
@@ -22,17 +23,20 @@ class PersonalDataParser(BaseParser):
 				if elem.tag is Comment:
 					continue
 				tag = self.removeNS(elem.tag)
+				elemText = elem.text.strip()
 				if tag == 'Nationality':
-					self.nationality = elem.text.strip()
+					self.nationality = elemText
 				elif tag == 'DateOfBirth':
-					self.dateOfBirth = elem.text.strip()
+					self.dateOfBirth = elemText
 				elif tag == 'MaritalStatus':
-					self.maritalStatus = elem.text.strip()
+					self.maritalStatus = elemText
+				elif tag == 'BirthPlace':
+					self.birthPlace = elemText
 
 
 	def __repr__(self):
-		retstr = u"<PersonalDataParser: dateOfBirth='%s', nationality='%s', maritalStatus='%s'>" % \
-			(self.dateOfBirth, self.nationality, self.maritalStatus)
+		retstr = u"<PersonalDataParser: dateOfBirth='%s', nationality='%s', maritalStatus='%s', birthPlace='%s'>" % \
+			(self.dateOfBirth, self.nationality, self.maritalStatus, self.birthPlace)
 		return retstr.encode( 'utf-8' )
 
 
