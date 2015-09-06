@@ -3,7 +3,7 @@
 
 # Country map - country code to country name
 countryMap = {
-	'en' : {
+	'en_GB' : {
 		'CA' : 'Canada',
 		'CH' : 'Switzerland',
 		'DE' : 'Germany',
@@ -11,7 +11,7 @@ countryMap = {
 		'RU' : 'Russia',
 		'YU' : 'Yugoslavia'
 	},
-	'de' : {
+	'de_CH' : {
 		'CA' : 'Kanada',
 		'CH' : 'Schweiz',
 		'DE' : 'Deutschland',
@@ -19,7 +19,7 @@ countryMap = {
 		'RU' : 'Rußland',
 		'YU' : 'Jugoslawien'
 	},
-	'sr' : {
+	'sr_RS' : {
 		'CA' : 'Канада',
 		'CH' : 'Швајцарска',
 		'DE' : 'Немачка',
@@ -31,19 +31,19 @@ countryMap = {
 
 # Language map - language code to language map
 langMap = {
-	'en' : {
+	'en_GB' : {
 		'DE' : 'German',
 		'EN' : 'English',
 		'RU' : 'Russian',
 		'SR' : 'Serbian',
 	},
-	'de' : {
+	'de_CH' : {
 		'DE' : 'Deutsch',
 		'EN' : 'Englisch',
 		'RU' : 'Russisch',
 		'SR' : 'Serbisch',
 	},
-	'sr' : {
+	'sr_RS' : {
 		'DE' : 'немачки',
 		'EN' : 'енглески',
 		'RU' : 'руски',
@@ -52,40 +52,40 @@ langMap = {
 }
 
 presMap = {
-	'en' : 'Present',
-	'de' : 'Heute',
-	'sr' : 'сада'
+	'en_GB' : 'Present',
+	'de_CH' : 'Heute',
+	'sr_RS' : 'сада'
 }
 
 emailAddrMap = {
-	'en' : 'email address',
-	'de' : 'E-Mail Addresse',
-	'sr' : 'адреса е-поште'
+	'en_GB' : 'email address',
+	'de_CH' : 'E-Mail Addresse',
+	'sr_RS' : 'адреса е-поште'
 }
 
 # Mobile number
 mobileNumberMap = {
-	'en' : 'mobile number',
-	'de' : 'Handy Nummer',
-	'sr' : 'број мобилног'
+	'en_GB' : 'mobile number',
+	'de_CH' : 'Handy Nummer',
+	'sr_RS' : 'број мобилног'
 }
 
 # Date Of Birth
 dobMap = {
-	'en' : 'Date of birth',
-	'de' : 'Geburtsdatum',
-	'sr' : 'Датум рођења'
+	'en_GB' : 'Date of birth',
+	'de_CH' : 'Geburtsdatum',
+	'sr_RS' : 'Датум рођења'
 }
 
 # Nationality
 nationalityMap = {
-	'en' : 'Nationality',
-	'de' : 'Nationalität',
-	'sr' : 'Држављанство'
+	'en_GB' : 'Nationality',
+	'de_CH' : 'Nationalität',
+	'sr_RS' : 'Држављанство'
 }
 
 citizenshipMap = {
-	'en' : {
+	'en_GB' : {
 		'CA' : 'Canadian',
 		'CH' : 'Swiss',
 		'DE' : 'German',
@@ -93,7 +93,7 @@ citizenshipMap = {
 		'RU' : 'Russian',
 		'YU' : 'Yugoslavian'
 	},
-	'de' : {
+	'de_CH' : {
 		'CA' : 'Kanadier',
 		'CH' : 'Schweizer',
 		'DE' : 'Deutscher',
@@ -101,7 +101,7 @@ citizenshipMap = {
 		'RU' : 'Ruß',
 		'YU' : 'Jugoslaw'
 	},
-	'sr' : {
+	'sr_RS' : {
 		'CA' : 'Канада',
 		'CH' : 'Швајцарска',
 		'DE' : 'Немачка',
@@ -113,14 +113,41 @@ citizenshipMap = {
 
 # Marital status
 maritalStatusMap = {
-	'en' : 'Marital status',
-	'de' : 'Zivilstand',
-	'sr' : 'Брачно стање'
+	'en_GB' : 'Marital status',
+	'de_CH' : 'Zivilstand',
+	'sr_RS' : 'Брачно стање'
 }
 
 # Swiss Work Permit
 swissPermitMap = {
-	'en' : 'Swiss work permit',
-	'de' : 'Schweizerische Niederlassungsbewilligung',
-	'sr' : 'Швајцарска радна дозвола',
+	'en_GB' : 'Swiss work permit',
+	'de_CH' : 'Schweizerische Niederlassungsbewilligung',
+	'sr_RS' : 'Швајцарска радна дозвола',
+}
+
+# References are available upon request
+referenceRequestMap = {
+	'en_GB' : 'References are available upon request.',
+	'de_CH' : 'References are available upon request.',
+	'sr_RS' : 'Референце се могу добити на захтев.',
+}
+
+yearsMap = {
+	'en_GB' : 'years',
+	'de_CH' : 'Jahre',
+	'sr_RS' : 'година',
+}
+
+# Since ... map
+sinceMap = {
+	'en_GB' : 'since',
+	'de_CH' : 'seit',
+	'sr_RS' : 'од',
+}
+
+# Place of birth map
+placeOfBirthMap = {
+	'en_GB' : 'Place of birth',
+	'de_CH' : 'Geburtsort',
+	'sr_RS' : 'Место рођења',
 }
