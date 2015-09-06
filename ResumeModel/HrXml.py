@@ -23,6 +23,7 @@ class HrXml:
 		self.personPhotoType = ''
 		self.personPhotoDesc = ''
 		self.dateOfBirth = ''
+		self.birthPlace = ''
 		self.nationality = ''
 		self.maritalStatus = ''
 		# Executive summary
