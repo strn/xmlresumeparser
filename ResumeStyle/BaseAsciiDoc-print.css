@@ -25,16 +25,21 @@ h1 {
 
 h2 {
 	font-size: 16pt;
-	color:#ba3925;
+	/*color:#ba3925;*/
 }
 
 h3 {
 	font-size: 14pt;
-	color:#ba3925;
+	/*color:#ba3925;*/
 }
 
 h4, h5, h6 {
 	font-size: 12pt;
+}
+
+sub, sup {
+	font-size: 8pt;
+	color: DarkGray;
 }
 
 /* Attributes required to highlight company name */
@@ -125,7 +130,7 @@ ol li ul,ol li ol{
 
 	* {
 		background: transparent !important;
-		color: black !important;
+		color: black;
 	}
 
 	pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
